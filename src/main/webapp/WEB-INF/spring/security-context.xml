@@ -7,6 +7,10 @@
 
 <bean id="customAccessDenied" class="com.company.security.CustomeAccessDeniedHandler"></bean>	
 <bean id="customLoginSuccess" class="com.company.security.CustomLoginSuccessHandler"></bean>
+<!-- <bean id="customPasswordEncoder" class="com.company.security.CustomNoOpPasswordEncoder"></bean> -->
+
+<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+<bean id="customUserDetailsService" class="com.company.security.CustomUserDetailsService"></bean>
 
 <security:http>
 
@@ -26,12 +30,13 @@
 </security:http>
  	
  	<security:authentication-manager>
- 		<security:authentication-provider>
- 			<security:user-service>
- 				<security:user name="member" password="{noop}member" authorities="ROLE_MEMBER"/>
- 				
- 				<security:user name="admin" password="{noop}admin" authorities="ROLE_MEMBER, ROLE_ADMIN"/>
- 			</security:user-service>
+ 		<security:authentication-provider
+ 			user-service-ref="customUserDetailsService">
+			
+<!--  			<security:password-encoder ref="customPasswordEncoder"/> -->
+
+			<security:password-encoder ref="bcryptPasswordEncoder"/>
+			
  		</security:authentication-provider>
  	
  	</security:authentication-manager>
